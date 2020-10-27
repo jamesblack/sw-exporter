@@ -1683,49 +1683,50 @@ module.exports = {
     7001: 'Pure Magic Crystal'
   },
 
-  getMonsterName(id) {
+  getMonsterName (id) {
     if (id) {
       if (this.monster.names[id]) {
-        return this.monster.names[id];
+        return this.monster.names[id]
       }
-      let family = Number(id.toString().substr(0, 3));
+      let family = Number(id.toString().substr(0, 3))
 
       if (this.monster.names[family]) {
-        let attribute = Number(id.toString().slice(-1));
-        return `${this.monster.names[family]} (${this.monster.attributes[attribute]})`;
+        let attribute = Number(id.toString().slice(-1))
+        return `${this.monster.names[family]} (${this.monster.attributes[attribute]})`
       }
-      return 'Unknown Monster';
+      return 'Unknown Monster'
     }
-    return false;
+    return false
   },
-  getRuneEfficiency(rune, toFixed = 2) {
-    let ratio = 0.0;
+  getRuneEfficiency (rune, toFixed = 2) {
+    let ratio = 0.0
 
     // main stat
-    ratio +=
-      this.rune.mainstat[rune.pri_eff[0]].max[this.isAncient(rune) ? rune.class - 10 : rune.class] / this.rune.mainstat[rune.pri_eff[0]].max[6];
+    ratio += this.rune.mainstat[rune.pri_eff[0]].max[this.isAncient(rune) ? rune.class - 10 : rune.class] / this.rune.mainstat[rune.pri_eff[0]].max[6]
+
+    // ratio 1
 
     // sub stats
     rune.sec_eff.forEach(stat => {
-      let value = stat[3] && stat[3] > 0 ? stat[1] + stat[3] : stat[1];
-      ratio += value / this.rune.substat[stat[0]].max[6];
-    });
+      let value = stat[3] && stat[3] > 0 ? stat[1] + stat[3] : stat[1]
+      ratio += value / this.rune.substat[stat[0]].max[6]
+    })
 
     // innate stat
     if (rune.prefix_eff && rune.prefix_eff[0] > 0) {
-      ratio += rune.prefix_eff[1] / this.rune.substat[rune.prefix_eff[0]].max[6];
+      ratio += rune.prefix_eff[1] / this.rune.substat[rune.prefix_eff[0]].max[6]
     }
 
-    let efficiency = (ratio / 2.8) * 100;
+    let efficiency = (ratio / 2.8) * 100
 
     return {
       current: ((ratio / 2.8) * 100).toFixed(toFixed),
       max: (efficiency + ((Math.max(Math.ceil((12 - rune.upgrade_curr) / 3.0), 0) * 0.2) / 2.8) * 100).toFixed(toFixed)
-    };
+    }
   },
-  getRuneEffect(eff) {
-    const type = eff[0];
-    const value = eff[1];
+  getRuneEffect (eff) {
+    const type = eff[0]
+    const value = eff[1]
 
     const effectTypeStrings = {
       0: '',
@@ -1740,33 +1741,33 @@ module.exports = {
       10: `CRI Dmg ${value}%`,
       11: `Resistance ${value}%`,
       12: `Accuracy ${value}%`
-    };
+    }
 
-    return effectTypeStrings[type];
+    return effectTypeStrings[type]
   },
-  getArtifactEffect(eff, mainStat = true) {
-    const type = eff[0];
-    const value = eff[1];
+  getArtifactEffect (eff, mainStat = true) {
+    const type = eff[0]
+    const value = eff[1]
 
     if (mainStat) {
       const mainStatEffectTypeStrings = {
         100: `HP +${value}`,
         101: `ATK +${value}`,
         102: `DEF +${value}`
-      };
+      }
 
-      return mainStatEffectTypeStrings[type];
+      return mainStatEffectTypeStrings[type]
     } else {
-      return this.artifact.effectTypes.sub[type](value);
+      return this.artifact.effectTypes.sub[type](value)
     }
   },
-  isAncient(item) {
+  isAncient (item) {
     if (item.craft_type) {
       // craft
-      return item.craft_type === 5 || item.craft_type === 6;
+      return item.craft_type === 5 || item.craft_type === 6
     } else if (item.class) {
       // rune
-      return item.class > 10;
+      return item.class > 10
     }
   }
-};
+}
